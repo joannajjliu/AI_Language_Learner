@@ -1,0 +1,225 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1a1a2e;
+  background: #f4f5f7;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+  font-weight: 650;
+}
+
+.tagline {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.banner.loading {
+  padding: 0.65rem 1rem;
+  margin-bottom: 1rem;
+  background: #e8ecf4;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 1.35rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.card.muted {
+  color: #666;
+}
+
+.card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+}
+
+.card h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+}
+
+input[type="text"],
+select {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #c8ccd4;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 1px;
+  border-color: #4a6cf7;
+}
+
+.btn {
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: #4a6cf7;
+  color: #fff;
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: #3d5ee6;
+}
+
+.btn.ghost {
+  background: transparent;
+  border-color: #c8ccd4;
+  color: #333;
+}
+
+.btn.ghost:hover:not(:disabled) {
+  background: #f0f1f4;
+}
+
+.toolbar {
+  margin-bottom: 0.75rem;
+}
+
+.form-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #b42318;
+}
+
+.lesson-meta {
+  margin: 0.35rem 0;
+  font-size: 0.95rem;
+}
+
+.lesson-body {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #f8f9fb;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+
+.examples ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.examples li {
+  margin-bottom: 0.5rem;
+}
+
+.examples .label {
+  font-size: 0.8rem;
+  color: #666;
+  margin-right: 0.25rem;
+}
+
+.exercise-block {
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.exercise-block:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.exercise-question {
+  margin: 0 0 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: #e8ecf4;
+  color: #444;
+  margin-right: 0.35rem;
+}
+
+.feedback .feedback-body {
+  margin-bottom: 0.75rem;
+}
+
+.feedback-text p {
+  margin: 0.35rem 0 0;
+}
+
+.memory-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.memory-block ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+
+p.muted {
+  color: #777;
+  font-size: 0.9rem;
+}
