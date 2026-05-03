@@ -50,6 +50,9 @@ export async function callLearnAPI(
         target_language: payload.target_language,
         native_language: payload.native_language,
         user_answers: payload.user_answers ?? [],
+        action: payload.action ?? "full",
+        lesson: payload.lesson ?? {},
+        exercises: payload.exercises ?? [],
       }),
     });
   } catch (err) {

@@ -54,12 +54,18 @@ export interface LearningState {
 }
 
 /** POST /learn request body. */
+
+export type LearnAction = "full" | "submit_answers" | "new_exercises";
+
 export interface LearnRequestPayload {
   user_id: string;
   level: string;
   target_language: string;
   native_language: string;
   user_answers?: string[];
+  action?: LearnAction;
+  lesson?: Lesson;
+  exercises?: Exercise[];
 }
 
 /** Fields collected from the start-session form (no answers). */

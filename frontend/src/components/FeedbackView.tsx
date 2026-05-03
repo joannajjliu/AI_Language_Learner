@@ -9,8 +9,15 @@ export default function FeedbackView({
   evaluation,
   memory,
 }: FeedbackViewProps) {
-  const ev =
+  const evaluationObj =
     evaluation && typeof evaluation === "object" ? evaluation : null;
+  const ev =
+    evaluationObj &&
+    (evaluationObj.score != null ||
+      typeof evaluationObj.feedback === "string" ||
+      typeof evaluationObj.needs_review === "boolean")
+      ? evaluationObj
+      : null;
   const mem = memory && typeof memory === "object" ? memory : null;
 
   if (!ev && !mem) {

@@ -8,10 +8,10 @@ type Level = (typeof LEVELS)[number];
 type FormState = SessionFormValues;
 
 const defaultForm: FormState = {
-  user_id: "",
+  user_id: "test-user",
   level: "A1",
-  target_language: "",
-  native_language: "",
+  target_language: "Spanish",
+  native_language: "English",
 };
 
 type UserFormProps = {
@@ -23,7 +23,10 @@ type UserFormProps = {
 export default function UserForm({ onSubmit, disabled, error }: UserFormProps) {
   const [values, setValues] = useState<FormState>(defaultForm);
 
-  function handleChange<K extends keyof FormState>(field: K, value: FormState[K]) {
+  function handleChange<K extends keyof FormState>(
+    field: K,
+    value: FormState[K],
+  ) {
     setValues((prev) => ({ ...prev, [field]: value }));
   }
 

@@ -10,11 +10,11 @@ function answersFromState(
     : [];
   return exercises.map((_, i) => list[i] ?? "");
 }
-
 type PracticeViewProps = {
   exercises: Exercise[] | undefined;
   userAnswersFromServer: string[] | undefined;
   onSubmitAnswers: (answers: string[]) => void;
+  onNewQuestions: () => void;
   disabled: boolean;
   error: string;
 };
@@ -23,9 +23,10 @@ export default function PracticeView({
   exercises,
   userAnswersFromServer,
   onSubmitAnswers,
+  onNewQuestions,
   disabled,
   error,
-}: PracticeViewProps) {
+}: Readonly<PracticeViewProps>) {
   const items = useMemo(
     () => (Array.isArray(exercises) ? exercises : []),
     [exercises],
@@ -68,9 +69,7 @@ export default function PracticeView({
         {items.map((ex, index) => (
           <div key={ex.id ?? String(index)} className="exercise-block">
             <p className="exercise-question">
-              {ex.type ? (
-                <span className="badge">{ex.type}</span>
-              ) : null}{" "}
+              {ex.type ? <span className="badge">{ex.type}</span> : null}{" "}
               {ex.question ?? "Question"}
             </p>
             <label className="field">
@@ -86,9 +85,19 @@ export default function PracticeView({
           </div>
         ))}
         {error ? <p className="form-error">{error}</p> : null}
-        <button type="submit" className="btn primary" disabled={disabled}>
-          {disabled ? "Submitting…" : "Submit answers"}
-        </button>
+        <div className="form-actions">
+          <button type="submit" className="btn primary" disabled={disabled}>
+            {disabled ? "Submitting…" : "Submit answers"}
+          </button>
+          <button
+            type="button"
+            className="btn ghost"
+            onClick={onNewQuestions}
+            disabled={disabled}
+          >
+            New questions
+          </button>
+        </div>
       </form>
     </section>
   );

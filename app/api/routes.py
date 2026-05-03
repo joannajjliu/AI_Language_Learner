@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal
 
 from fastapi import APIRouter
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.graph.builder import learning_graph
 from app.graph.state import LearningState
@@ -22,6 +22,24 @@ class LearnRequest(BaseModel):
     target_language: str
     native_language: str
     user_answers: List[str] = Field(default_factory=list)
+    action: Literal["full", "submit_answers", "new_exercises"] = "full"
+    lesson: Dict[str, Any] = Field(default_factory=dict)
+    exercises: List[Dict[str, Any]] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_action_payload(self) -> "LearnRequest":
+        if self.action == "submit_answers":
+            if not self.lesson:
+                raise ValueError("submit_answers requires a lesson snapshot from the client")
+            if not self.exercises:
+                raise ValueError("submit_answers requires a non-empty exercises list")
+            if len(self.user_answers) != len(self.exercises):
+                raise ValueError(
+                    "submit_answers requires user_answers length to match exercises",
+                )
+        if self.action == "new_exercises" and not self.lesson:
+            raise ValueError("new_exercises requires a lesson snapshot from the client")
+        return self
 
 
 class LearnResponse(BaseModel):
@@ -34,18 +52,30 @@ class LearnResponse(BaseModel):
 def learn(payload: LearnRequest) -> LearnResponse:
     """Execute one LangGraph learning workflow for a user."""
     store = get_memory_store()
+    if payload.action == "full":
+        lesson_snapshot: Dict[str, Any] = {}
+        exercises_snapshot: List[Dict[str, Any]] = []
+    elif payload.action == "new_exercises":
+        lesson_snapshot = dict(payload.lesson)
+        exercises_snapshot = []
+    else:
+        lesson_snapshot = dict(payload.lesson)
+        exercises_snapshot = list(payload.exercises)
+
     initial_state: LearningState = {
         "user_id": payload.user_id,
         "level": payload.level,
         "target_language": payload.target_language,
         "native_language": payload.native_language,
-        "lesson": {},
-        "exercises": [],
+        "lesson": lesson_snapshot,
+        "exercises": exercises_snapshot,
         "user_answers": payload.user_answers,
         "evaluation": {},
         "memory": store.get(payload.user_id),
         "loop_count": 0,
+        "request_action": payload.action,
     }
 
-    result = learning_graph.invoke(initial_state)
+    result = dict(learning_graph.invoke(initial_state))
+    result.pop("request_action", None)
     return LearnResponse(state=result)

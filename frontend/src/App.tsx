@@ -33,6 +33,7 @@ export default function App() {
 
   function handleStartSession(formValues: SessionFormValues) {
     runLearn({
+      action: "full",
       user_id: formValues.user_id,
       level: formValues.level,
       target_language: formValues.target_language,
@@ -44,11 +45,27 @@ export default function App() {
   function handleSubmitAnswers(userAnswers: string[]) {
     if (!learningState) return;
     runLearn({
+      action: "submit_answers",
       user_id: learningState.user_id,
       level: learningState.level,
       target_language: learningState.target_language,
       native_language: learningState.native_language,
+      lesson: learningState.lesson,
+      exercises: learningState.exercises,
       user_answers: userAnswers,
+    });
+  }
+
+  function handleNewQuestions() {
+    if (!learningState) return;
+    runLearn({
+      action: "new_exercises",
+      user_id: learningState.user_id,
+      level: learningState.level,
+      target_language: learningState.target_language,
+      native_language: learningState.native_language,
+      lesson: learningState.lesson,
+      user_answers: [],
     });
   }
 
@@ -70,7 +87,11 @@ export default function App() {
       {loading ? <div className="banner loading">Loading…</div> : null}
 
       {!learningState ? (
-        <UserForm onSubmit={handleStartSession} disabled={loading} error={error} />
+        <UserForm
+          onSubmit={handleStartSession}
+          disabled={loading}
+          error={error}
+        />
       ) : (
         <>
           <div className="toolbar">
@@ -88,6 +109,7 @@ export default function App() {
             exercises={learningState.exercises}
             userAnswersFromServer={learningState.user_answers}
             onSubmitAnswers={handleSubmitAnswers}
+            onNewQuestions={handleNewQuestions}
             disabled={loading}
             error={error}
           />

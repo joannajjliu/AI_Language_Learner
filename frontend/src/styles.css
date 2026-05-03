@@ -72,6 +72,13 @@ body {
   gap: 0.85rem;
 }
 
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .field {
   display: flex;
   flex-direction: column;

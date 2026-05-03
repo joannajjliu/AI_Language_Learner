@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, TypedDict
+from typing import Any, Dict, List, NotRequired, TypedDict
 
 
 class LearningState(TypedDict):
@@ -18,3 +18,5 @@ class LearningState(TypedDict):
     evaluation: Dict[str, Any]
     memory: Dict[str, Any]
     loop_count: int
+    # Set by API routing only; omit from persisted client state.
+    request_action: NotRequired[str]
