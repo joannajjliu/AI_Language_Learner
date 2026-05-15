@@ -7,7 +7,7 @@ import json
 from app.graph.agents.utils import load_prompt
 from app.graph.llm_helpers import PracticeOutput, invoke_structured
 from app.graph.state import LearningState
-from app.llm import get_chat_model
+from app.llm import get_practice_chat_model
 
 
 def practice_agent(state: LearningState) -> LearningState:
@@ -27,7 +27,7 @@ def practice_agent(state: LearningState) -> LearningState:
 
 Produce 2–4 varied exercises (e.g. translation, fill_blank, short_answer). Each needs a unique id."""
 
-    llm = get_chat_model()
+    llm = get_practice_chat_model()
     out = invoke_structured(llm, system=system, human=human, schema=PracticeOutput)
 
     exercises: list[dict] = [{**ex.model_dump(), "topic": topic} for ex in out.exercises]

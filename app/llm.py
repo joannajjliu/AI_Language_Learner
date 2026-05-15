@@ -24,6 +24,17 @@ def _default_chat_model() -> BaseChatModel:
     return _build_chat_model(get_llm_config())
 
 
+@lru_cache(maxsize=1)
+def _practice_chat_model() -> BaseChatModel:
+    cfg = get_llm_config()
+    return _build_chat_model(
+        LLMConfig(
+            openai_api_key=cfg.openai_api_key,
+            chat_model=cfg.practice_chat_model,
+        ),
+    )
+
+
 def get_chat_model(*, config: LLMConfig | None = None) -> BaseChatModel:
     """Return the configured OpenAI chat model via LangChain's unified initializer.
 
@@ -36,3 +47,15 @@ def get_chat_model(*, config: LLMConfig | None = None) -> BaseChatModel:
     if config is not None:
         return _build_chat_model(config)
     return _default_chat_model()
+
+
+def get_practice_chat_model(*, config: LLMConfig | None = None) -> BaseChatModel:
+    """Chat model used only for practice-question generation (typically smaller / faster)."""
+    if config is not None:
+        return _build_chat_model(
+            LLMConfig(
+                openai_api_key=config.openai_api_key,
+                chat_model=config.practice_chat_model,
+            ),
+        )
+    return _practice_chat_model()
