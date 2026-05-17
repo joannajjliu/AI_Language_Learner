@@ -26,12 +26,16 @@ class PostgresLearningStore:
         self,
         user_id: str,
         *,
+        email: str,
+        display_name: str,
         native_language: str,
         target_language: str,
         cefr_level: str,
     ) -> None:
         self._repo.ensure_user(
             user_id,
+            email=email,
+            display_name=display_name,
             native_language=native_language,
             target_language=target_language,
             cefr_level=cefr_level,
@@ -61,7 +65,7 @@ class PostgresLearningStore:
     def apply_session(self, state: LearningState) -> Dict[str, Any]:
         """Merge graph outcomes into storage and return the updated snapshot."""
         user_id = state["user_id"]
-        self.ensure_user(
+        self._repo.sync_user_languages(
             user_id,
             native_language=state["native_language"],
             target_language=state["target_language"],

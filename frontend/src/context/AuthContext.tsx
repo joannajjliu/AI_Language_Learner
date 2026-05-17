@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { isGoogleAuthConfigured, verifyGoogleCredential } from "../services/auth";
+import { verifyGoogleCredential } from "../services/auth";
 import type { AuthUser } from "../types/auth";
 
 const STORAGE_KEY = "language-tutor-auth";
@@ -19,7 +19,6 @@ type StoredAuth = {
 type AuthContextValue = {
   user: AuthUser | null;
   credential: string | null;
-  googleEnabled: boolean;
   loading: boolean;
   error: string;
   signInWithGoogle: (credential: string) => Promise<void>;
@@ -50,8 +49,7 @@ function writeStoredAuth(value: StoredAuth | null) {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const googleEnabled = isGoogleAuthConfigured();
-  const [stored] = useState(() => (googleEnabled ? readStoredAuth() : null));
+  const [stored] = useState(() => readStoredAuth());
   const [user, setUser] = useState<AuthUser | null>(stored?.user ?? null);
   const [credential, setCredential] = useState<string | null>(
     stored?.credential ?? null,
@@ -92,23 +90,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       credential,
-      googleEnabled,
       loading,
       error,
       signInWithGoogle,
       signOut,
       clearError,
     }),
-    [
-      user,
-      credential,
-      googleEnabled,
-      loading,
-      error,
-      signInWithGoogle,
-      signOut,
-      clearError,
-    ],
+    [user, credential, loading, error, signInWithGoogle, signOut, clearError],
   );
 
   return (

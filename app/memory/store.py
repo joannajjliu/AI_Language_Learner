@@ -20,12 +20,21 @@ class InMemoryLearningStore:
         self,
         user_id: str,
         *,
+        email: str,
+        display_name: str,
         native_language: str,
         target_language: str,
         cefr_level: str,
     ) -> None:
         """No-op for the in-process store (profile lives on each request)."""
-        del user_id, native_language, target_language, cefr_level
+        del (
+            user_id,
+            email,
+            display_name,
+            native_language,
+            target_language,
+            cefr_level,
+        )
 
     def get(self, user_id: str) -> Dict[str, Any]:
         """Return memory for a user or initialize a default profile."""

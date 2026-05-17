@@ -1,10 +1,6 @@
 import type { AuthUser, GoogleAuthResponse } from "../types/auth";
 import { formatErrorDetail, getBaseUrl } from "./api";
 
-export function isGoogleAuthConfigured(): boolean {
-  return Boolean((process.env.REACT_APP_GOOGLE_CLIENT_ID || "").trim());
-}
-
 export async function verifyGoogleCredential(
   credential: string,
 ): Promise<AuthUser> {

@@ -7,7 +7,6 @@ from typing import Annotated
 from fastapi import Header, HTTPException, status
 
 from app.auth.google import GoogleUser, verify_google_credential
-from app.config import is_google_auth_enabled
 
 
 def _extract_bearer_token(authorization: str | None) -> str:
@@ -34,12 +33,7 @@ def _extract_bearer_token(authorization: str | None) -> str:
 def get_google_user_from_header(
     authorization: Annotated[str | None, Header()] = None,
 ) -> GoogleUser:
-    """Require a valid Google ID token when Google auth is enabled."""
-    if not is_google_auth_enabled():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Google sign-in is not configured on the server",
-        )
+    """Require a valid Google ID token."""
     token = _extract_bearer_token(authorization)
     try:
         return verify_google_credential(token)
@@ -53,15 +47,12 @@ def get_google_user_from_header(
 def require_matching_user(
     payload_user_id: str,
     authorization: str | None,
-) -> str:
-    """When Google auth is enabled, verify the bearer token matches payload user_id."""
-    if not is_google_auth_enabled():
-        return payload_user_id
-
+) -> GoogleUser:
+    """Verify the bearer token and ensure it matches the request user_id."""
     user = get_google_user_from_header(authorization)
     if payload_user_id != user.user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="user_id does not match the signed-in Google account",
         )
-    return user.user_id
+    return user

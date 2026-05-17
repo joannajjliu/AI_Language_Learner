@@ -37,15 +37,13 @@ export function formatErrorDetail(data: unknown, fallback: string): string {
  */
 export async function callLearnAPI(
   payload: LearnRequestPayload,
-  authToken?: string | null,
+  authToken: string,
 ): Promise<LearningState> {
   const url = `${getBaseUrl().replace(/\/$/, "")}/learn`;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${authToken}`,
   };
-  if (authToken) {
-    headers.Authorization = `Bearer ${authToken}`;
-  }
   let response: Response;
   try {
     response = await fetch(url, {

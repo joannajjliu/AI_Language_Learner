@@ -11,7 +11,7 @@ _SCHEMA_PATH = Path(__file__).resolve().parent / "schema.sql"
 
 def ensure_schema(conninfo: str) -> None:
     """Create application tables if they do not exist."""
-    sql = _SCHEMA_PATH.read_text(encoding="utf-8")
+    schema_sql = _SCHEMA_PATH.read_text(encoding="utf-8")
     with psycopg.connect(conninfo) as conn:
-        conn.execute(sql)
+        conn.execute(schema_sql)
         conn.commit()

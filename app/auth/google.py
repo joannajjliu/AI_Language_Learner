@@ -16,7 +16,7 @@ class GoogleUser:
 
     user_id: str
     email: str
-    name: str
+    display_name: str
     picture: str | None
 
 
@@ -28,8 +28,6 @@ def google_user_id(google_sub: str) -> str:
 def verify_google_credential(credential: str) -> GoogleUser:
     """Validate a Google ID token and return the signed-in user."""
     client_id = get_google_client_id()
-    if not client_id:
-        raise ValueError("Google sign-in is not configured on the server")
 
     try:
         idinfo = id_token.verify_oauth2_token(
@@ -45,13 +43,16 @@ def verify_google_credential(credential: str) -> GoogleUser:
         raise ValueError("Google credential is missing subject")
 
     email = str(idinfo.get("email") or "").strip()
-    name = str(idinfo.get("name") or email or "Learner").strip()
+    if not email:
+        raise ValueError("Google account must include a verified email")
+
+    display_name = str(idinfo.get("name") or email).strip()
     picture = idinfo.get("picture")
     picture_str = str(picture).strip() if picture else None
 
     return GoogleUser(
         user_id=google_user_id(sub),
         email=email,
-        name=name,
+        display_name=display_name,
         picture=picture_str,
     )

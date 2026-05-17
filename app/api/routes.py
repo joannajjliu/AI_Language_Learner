@@ -55,10 +55,13 @@ def learn(
     authorization: str | None = Header(default=None),
 ) -> LearnResponse:
     """Execute one LangGraph learning workflow for a user."""
-    user_id = require_matching_user(payload.user_id, authorization)
+    google_user = require_matching_user(payload.user_id, authorization)
+    user_id = google_user.user_id
     store = get_memory_store()
     store.ensure_user(
         user_id,
+        email=google_user.email,
+        display_name=google_user.display_name,
         native_language=payload.native_language,
         target_language=payload.target_language,
         cefr_level=payload.level,

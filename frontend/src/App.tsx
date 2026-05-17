@@ -13,7 +13,7 @@ import type {
 import "./styles.css";
 
 export default function App() {
-  const { credential, googleEnabled } = useAuth();
+  const { credential, user } = useAuth();
   const [learningState, setLearningState] = useState<LearningState | null>(
     null,
   );
@@ -24,15 +24,17 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const authToken = googleEnabled ? credential : null;
-      const state = await callLearnAPI(payload, authToken);
+      if (!credential) {
+        throw new Error("Sign in with Google to continue.");
+      }
+      const state = await callLearnAPI(payload, credential);
       setLearningState(state);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  }, [credential, googleEnabled]);
+  }, [credential]);
 
   function handleStartSession(formValues: SessionFormValues) {
     runLearn({
@@ -97,6 +99,9 @@ export default function App() {
         />
       ) : (
         <>
+          {user ? (
+            <p className="hint session-user">Signed in as {user.email}</p>
+          ) : null}
           <div className="toolbar">
             <button
               type="button"

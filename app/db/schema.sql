@@ -1,6 +1,8 @@
--- Learner profile (user_id from the API may be any stable string).
+-- Learner profile (id is google-{sub} from Google Sign-In).
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
+    email TEXT NOT NULL,
+    display_name TEXT NOT NULL,
     native_language TEXT NOT NULL,
     target_language TEXT NOT NULL,
     cefr_level TEXT NOT NULL,

@@ -62,15 +62,20 @@ def get_database_url() -> str | None:
     return url or None
 
 
-def get_google_client_id() -> str | None:
+def get_google_client_id() -> str:
     """OAuth 2.0 client id for Google Sign-In (Web application)."""
     client_id = (os.environ.get("GOOGLE_CLIENT_ID") or "").strip()
-    return client_id or None
+    if not client_id:
+        raise RuntimeError(
+            "GOOGLE_CLIENT_ID is required. Create an OAuth Web client in Google Cloud "
+            "Console and set the same id in the API and frontend environments."
+        )
+    return client_id
 
 
-def is_google_auth_enabled() -> bool:
-    """True when the API should require Google ID tokens."""
-    return get_google_client_id() is not None
+def validate_required_config() -> None:
+    """Fail fast when mandatory environment variables are missing."""
+    get_google_client_id()
 
 
 def get_llm_config() -> LLMConfig:

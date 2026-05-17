@@ -25,6 +25,8 @@ class PostgresMemoryRepository:
         self,
         user_id: str,
         *,
+        email: str,
+        display_name: str,
         native_language: str,
         target_language: str,
         cefr_level: str,
@@ -33,15 +35,54 @@ class PostgresMemoryRepository:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    INSERT INTO users (id, native_language, target_language, cefr_level)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO users (
+                        id,
+                        email,
+                        display_name,
+                        native_language,
+                        target_language,
+                        cefr_level
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s)
                     ON CONFLICT (id) DO UPDATE SET
+                        email = EXCLUDED.email,
+                        display_name = EXCLUDED.display_name,
                         native_language = EXCLUDED.native_language,
                         target_language = EXCLUDED.target_language,
                         cefr_level = EXCLUDED.cefr_level,
                         updated_at = NOW()
                     """,
-                    (user_id, native_language, target_language, cefr_level),
+                    (
+                        user_id,
+                        email,
+                        display_name,
+                        native_language,
+                        target_language,
+                        cefr_level,
+                    ),
+                )
+            conn.commit()
+
+    def sync_user_languages(
+        self,
+        user_id: str,
+        *,
+        native_language: str,
+        target_language: str,
+        cefr_level: str,
+    ) -> None:
+        with psycopg.connect(self._conninfo) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE users SET
+                        native_language = %s,
+                        target_language = %s,
+                        cefr_level = %s,
+                        updated_at = NOW()
+                    WHERE id = %s
+                    """,
+                    (native_language, target_language, cefr_level, user_id),
                 )
             conn.commit()
 
