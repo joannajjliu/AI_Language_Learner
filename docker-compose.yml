@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: tutor
+      POSTGRES_PASSWORD: tutor
+      POSTGRES_DB: tutor
+    ports:
+      - "5432:5432"
+    volumes:
+      - tutor_pg_data:/var/lib/postgresql/data
+
+volumes:
+  tutor_pg_data:

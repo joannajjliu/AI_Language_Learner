@@ -52,6 +52,12 @@ class LearnResponse(BaseModel):
 def learn(payload: LearnRequest) -> LearnResponse:
     """Execute one LangGraph learning workflow for a user."""
     store = get_memory_store()
+    store.ensure_user(
+        payload.user_id,
+        native_language=payload.native_language,
+        target_language=payload.target_language,
+        cefr_level=payload.level,
+    )
     if payload.action == "full":
         lesson_snapshot: Dict[str, Any] = {}
         exercises_snapshot: List[Dict[str, Any]] = []

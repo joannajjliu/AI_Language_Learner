@@ -20,6 +20,7 @@ def planner_agent(state: LearningState) -> LearningState:
 - Target language: {state["target_language"]}
 - Native language: {state["native_language"]}
 - Completed topics: {json.dumps(memory.get("completed_topics", []), ensure_ascii=True)}
+- Known vocabulary: {json.dumps(memory.get("known_vocab", [])[-20:], ensure_ascii=True)}
 - Recent mistakes: {json.dumps(memory.get("mistakes", [])[-5:], ensure_ascii=True)}
 """
 

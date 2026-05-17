@@ -56,6 +56,12 @@ class LLMConfig(BaseModel):
     )
 
 
+def get_database_url() -> str | None:
+    """Return PostgreSQL connection URL if DATABASE_URL is set; otherwise None (in-memory store)."""
+    url = (os.environ.get("DATABASE_URL") or "").strip()
+    return url or None
+
+
 def get_llm_config() -> LLMConfig:
     """Build LLM settings from the current process environment."""
     model = (os.environ.get(OPENAI_CHAT_MODEL_ENV) or "").strip() or _FALLBACK_CHAT_MODEL
