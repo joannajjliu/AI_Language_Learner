@@ -31,6 +31,5 @@ def planner_agent(state: LearningState) -> LearningState:
         "topic": out.topic,
         "objective": out.objective,
         "difficulty": out.difficulty,
-        "prompt_template": system,
     }
     return state

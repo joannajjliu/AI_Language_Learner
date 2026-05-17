@@ -10,6 +10,12 @@ from pydantic import BaseModel, Field, model_validator
 from app.auth.deps import require_matching_user
 from app.graph.builder import learning_graph
 from app.graph.state import LearningState
+from app.guardrails import (
+    sanitize_exercises,
+    sanitize_lesson_snapshot,
+    sanitize_user_answers,
+    strip_internal_fields,
+)
 from app.memory import get_memory_store
 
 router = APIRouter()
@@ -69,12 +75,15 @@ def learn(
     if payload.action == "full":
         lesson_snapshot: Dict[str, Any] = {}
         exercises_snapshot: List[Dict[str, Any]] = []
+        user_answers: List[str] = []
     elif payload.action == "new_exercises":
-        lesson_snapshot = dict(payload.lesson)
+        lesson_snapshot = sanitize_lesson_snapshot(payload.lesson)
         exercises_snapshot = []
+        user_answers = []
     else:
-        lesson_snapshot = dict(payload.lesson)
-        exercises_snapshot = list(payload.exercises)
+        lesson_snapshot = sanitize_lesson_snapshot(payload.lesson)
+        exercises_snapshot = sanitize_exercises(payload.exercises)
+        user_answers = sanitize_user_answers(payload.user_answers)
 
     initial_state: LearningState = {
         "user_id": user_id,
@@ -83,7 +92,7 @@ def learn(
         "native_language": payload.native_language,
         "lesson": lesson_snapshot,
         "exercises": exercises_snapshot,
-        "user_answers": payload.user_answers,
+        "user_answers": user_answers,
         "evaluation": {},
         "memory": store.get(user_id),
         "loop_count": 0,
@@ -92,4 +101,4 @@ def learn(
 
     result = dict(learning_graph.invoke(initial_state))
     result.pop("request_action", None)
-    return LearnResponse(state=result)
+    return LearnResponse(state=strip_internal_fields(result))

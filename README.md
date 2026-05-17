@@ -23,6 +23,12 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
+run python unit tests:
+
+```
+python -m unittest discover -s tests -v
+```
+
 start frontend:
 
 ```

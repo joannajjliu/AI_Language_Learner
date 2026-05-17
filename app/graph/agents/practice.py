@@ -42,5 +42,4 @@ Produce 2–4 varied exercises (e.g. translation, fill_blank, short_answer). Eac
         ]
 
     state["exercises"] = exercises
-    state["lesson"]["practice_prompt_template"] = system
     return state

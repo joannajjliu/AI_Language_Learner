@@ -31,6 +31,5 @@ Ground the lesson in the topic and objective above. Include at least two example
         "title": out.title,
         "content": out.content,
         "examples": [ex.model_dump() for ex in out.examples],
-        "prompt_template": system,
     }
     return state
