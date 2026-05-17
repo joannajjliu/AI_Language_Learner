@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Literal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 from pydantic import BaseModel, Field, model_validator
 
+from app.auth.deps import require_matching_user
 from app.graph.builder import learning_graph
 from app.graph.state import LearningState
 from app.memory import get_memory_store
@@ -49,11 +50,15 @@ class LearnResponse(BaseModel):
 
 
 @router.post("/learn", response_model=LearnResponse)
-def learn(payload: LearnRequest) -> LearnResponse:
+def learn(
+    payload: LearnRequest,
+    authorization: str | None = Header(default=None),
+) -> LearnResponse:
     """Execute one LangGraph learning workflow for a user."""
+    user_id = require_matching_user(payload.user_id, authorization)
     store = get_memory_store()
     store.ensure_user(
-        payload.user_id,
+        user_id,
         native_language=payload.native_language,
         target_language=payload.target_language,
         cefr_level=payload.level,
@@ -69,7 +74,7 @@ def learn(payload: LearnRequest) -> LearnResponse:
         exercises_snapshot = list(payload.exercises)
 
     initial_state: LearningState = {
-        "user_id": payload.user_id,
+        "user_id": user_id,
         "level": payload.level,
         "target_language": payload.target_language,
         "native_language": payload.native_language,
@@ -77,7 +82,7 @@ def learn(payload: LearnRequest) -> LearnResponse:
         "exercises": exercises_snapshot,
         "user_answers": payload.user_answers,
         "evaluation": {},
-        "memory": store.get(payload.user_id),
+        "memory": store.get(user_id),
         "loop_count": 0,
         "request_action": payload.action,
     }

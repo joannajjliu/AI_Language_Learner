@@ -62,6 +62,17 @@ def get_database_url() -> str | None:
     return url or None
 
 
+def get_google_client_id() -> str | None:
+    """OAuth 2.0 client id for Google Sign-In (Web application)."""
+    client_id = (os.environ.get("GOOGLE_CLIENT_ID") or "").strip()
+    return client_id or None
+
+
+def is_google_auth_enabled() -> bool:
+    """True when the API should require Google ID tokens."""
+    return get_google_client_id() is not None
+
+
 def get_llm_config() -> LLMConfig:
     """Build LLM settings from the current process environment."""
     model = (os.environ.get(OPENAI_CHAT_MODEL_ENV) or "").strip() or _FALLBACK_CHAT_MODEL

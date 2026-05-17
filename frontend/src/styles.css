@@ -151,6 +151,47 @@ select:focus {
   color: #b42318;
 }
 
+.hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.auth-panel {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.auth-user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.auth-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.auth-email {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.google-sign-in {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .lesson-meta {
   margin: 0.35rem 0;
   font-size: 0.95rem;

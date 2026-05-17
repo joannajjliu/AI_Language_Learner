@@ -2,7 +2,7 @@ import type { LearnRequestPayload, LearningState } from "../types/learning";
 
 const DEFAULT_BASE = "http://localhost:8000";
 
-function getBaseUrl(): string {
+export function getBaseUrl(): string {
   return process.env.REACT_APP_API_URL || DEFAULT_BASE;
 }
 
@@ -10,7 +10,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function formatErrorDetail(data: unknown, fallback: string): string {
+export function formatErrorDetail(data: unknown, fallback: string): string {
   if (!isRecord(data)) {
     return fallback;
   }
@@ -37,13 +37,20 @@ function formatErrorDetail(data: unknown, fallback: string): string {
  */
 export async function callLearnAPI(
   payload: LearnRequestPayload,
+  authToken?: string | null,
 ): Promise<LearningState> {
   const url = `${getBaseUrl().replace(/\/$/, "")}/learn`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
   let response: Response;
   try {
     response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         user_id: payload.user_id,
         level: payload.level,

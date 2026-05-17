@@ -6,3 +6,4 @@ langchain-openai
 pydantic
 python-dotenv
 psycopg[binary]
+google-auth

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useAuth } from "./context/AuthContext";
 import UserForm from "./components/UserForm";
 import LessonView from "./components/LessonView";
 import PracticeView from "./components/PracticeView";
@@ -12,6 +13,7 @@ import type {
 import "./styles.css";
 
 export default function App() {
+  const { credential, googleEnabled } = useAuth();
   const [learningState, setLearningState] = useState<LearningState | null>(
     null,
   );
@@ -22,14 +24,15 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const state = await callLearnAPI(payload);
+      const authToken = googleEnabled ? credential : null;
+      const state = await callLearnAPI(payload, authToken);
       setLearningState(state);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [credential, googleEnabled]);
 
   function handleStartSession(formValues: SessionFormValues) {
     runLearn({
